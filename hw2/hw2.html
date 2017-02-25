@@ -1,0 +1,134 @@
+<html>
+<head>
+    <title>Kong Hu, zh299</title>
+    <link href="https://fonts.googleapis.com/css?family=Alegreya|Alegreya+Sans" rel\
+            ="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <style>
+        body { font-family: 'Alegreya Sans', Calibri, sans-serif; }
+        svg { border: solid black 1px; }
+        path { fill: red; stroke: black; stroke-width: 10; opacity: 0.7; }
+
+    </style>
+</head>
+<body>
+<p id="q1">
+    1. Create a 200x200 pixel SVG element with the word "Cornell" in red, centered in
+    the exact middle (vertically and horizontally), using the Palatino typeface, with a
+    drop shadow for the word. Consult the SVG specification to find out how to change
+    color and font attributes, set text alignment, and add filters and shadows. Put a
+    small green circle at 100,100 so we can see that your text is centered. If you do not
+    have Palatino, you may use another font to test your code. <br>
+    <svg height="200" width="200">
+        <defs>
+            <filter id="f2" x="0" y="0" width="200%" height="200%">
+                <feOffset result="offOut" in="SourceGraphic" dx="5" dy="5" />
+                <feGaussianBlur result="blurOut" in="offOut" stdDeviation="5" />
+                <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+            </filter>
+        </defs>
+        <circle r="10" cx = "100" cy="100"></circle>
+        <text fill="red" x="100" y="100" font-size="30px" font-family="Palatino" text-anchor="middle" alignment-baseline="central"  filter="url(#f2)">Cornell</text>
+
+    </svg>
+</p>
+
+<p id="q2">
+    2. Create a 200x200 pixel SVG element. Reproduce the plot in Figure 2 of the
+    Wickham "Layered Grammar of Graphics" reading using SVG elements. Recalculate
+    the pixel positions for the (x, y) coordinates in Table 2 as necessary. Remember to
+    account for the "padding" pixels below and to the left of the axes. You do NOT need
+    to include the short tick marks. Table 2 contains data values. Table 3 contains those
+    data values transformed into pixel coordinates. You will need to recalculate these
+    pixel coordinates. The result may not look exactly like Figure 2; we will know what to
+    expect for the data in Table 2. <br>
+    <svg height="200" width="200">
+        <line x1="10" y1="10" x2="10" y2="190" style="stroke:rgb(255,0,0);stroke-width:2" />
+        <line x1="10" y1="190" x2="190" y2="190" style="stroke:rgb(255,0,0);stroke-width:2" />
+        <circle r="5" cx="32" cy="184"></circle>
+        <circle r="5" cx="10" cy="190"></circle>
+        <rect height="5" width="5" x="77" y="159"></rect>
+        <rect height="5" width="5" x="190" y="10"></rect>
+    </svg>
+</p>
+
+<p id ="q3">
+    3. Use SVG path elements to create a design for the course flag. You must
+    include three heptagrams and position them using the transform attribute. You
+    may use any additional shapes or patterns you can think of. If you use a tool to
+    generate coordinates for shapes, please cite that tool. You must also include the
+    course motto: ESSE ET VIDERI using a text element. Hint: for repeated shapes,
+        write the coordinates once, copy it several times, and then use some combination
+        of translate() and scale() transformations to place them.<br>
+
+    <svg height="600" width="600">
+        <g>
+        <path d="M 93,50 4,29" />
+        <path d="M 4,29 75,86" />
+        <path d="M 36,4 75,86" />
+        <path d="M 36,4 36,95" />
+        <path d="M 36,95 75,13" />
+        <path d="M 4,70 75,13" />
+        <path d="M 93,50 4,70" />
+    </g>
+        <g transform="translate(150,150) scale(2)">
+            <path d="M 93,50 4,29" />
+            <path d="M 4,29 75,86" />
+            <path d="M 36,4 75,86" />
+            <path d="M 36,4 36,95" />
+            <path d="M 36,95 75,13" />
+            <path d="M 4,70 75,13" />
+            <path d="M 93,50 4,70" />
+        </g>
+
+        <g transform="translate(350,350) scale(3)">
+            <path d="M 93,50 4,29" />
+            <path d="M 4,29 75,86" />
+            <path d="M 36,4 75,86" />
+            <path d="M 36,4 36,95" />
+            <path d="M 36,95 75,13" />
+            <path d="M 4,70 75,13" />
+            <path d="M 93,50 4,70" />
+        </g>
+        <text fill="red" x="300" y="300" font-family="Palatino" text-anchor="middle" alignment-baseline="central">ESSE ET VIDERI </text>
+    </svg>
+
+</p>
+
+
+<p id="q4">
+    4. Make a bar plot that represents the frequency of numbers in this dataset:
+    var samples = [4, 11, 6, 7, 3, 7, 2, 4, 15, 6, 7, 5, 4, 15, 7, 5, 7];
+    The x-axis will correspond to values from the dataset, and the y-axis will correspond
+    to the frequency of those values. Figure out how to map those numbers into pixel
+    coordinates. Consider the following dataset: <br>
+<p>B.  mean:6.76 meadian:6 mode:7 standard deviation:3.72</p><br>
+    <svg height="210" width="320">
+        <rect x="0" y="170" width = "10" height = "0"></rect>
+        <rect x="20" y="170" width = "10" height = "0"></rect>
+        <rect x="40" y="170" width = "10" height = "40"></rect>
+        <rect x="60" y="170" width = "10" height = "40"></rect>
+        <rect x="80" y="90" width = "10" height = "120"></rect>
+        <rect x="100" y="130" width = "10" height = "80"></rect>
+        <rect x="120" y="130" width = "10" height = "80"></rect>
+        <rect x="140" y="10" width = "10" height = "200"></rect>
+        <rect x="160" y="210" width = "10" height = "0"></rect>
+        <rect x="180" y="210" width = "10" height = "0"></rect>
+        <rect x="200" y="210" width = "10" height = "0"></rect>
+        <rect x="220" y="170" width = "10" height = "40"></rect>
+        <rect x="240" y="210" width = "10" height = "0"></rect>
+        <rect x="260" y="210" width = "10" height = "0"></rect>
+        <rect x="280" y="210" width = "10" height = "0"></rect>
+        <rect x="300" y="130" width = "10" height = "80"></rect>
+        <line x1="145" y1="285" x2="145" y2="0"  style="stroke:rgb(127,0,255);stroke-width:2" />
+        <line x1="125" y1="285" x2="125" y2="0"  style="stroke:rgb(0,0,255);stroke-width:2" />
+        <line x1="140.2" y1="285" x2="140.2" y2="0"  style="stroke:rgb(255,0,0);stroke-width:2" />
+        <rect x="60.8" y="0" height="210" width="148.8" fill="#044B94" fill-opacity="0.5" />
+    </svg>
+<p>E. Probability that a randomly selected datapoint is equal to 4: 3/17 =.1765</p>
+
+</body>
+
+
+</html>

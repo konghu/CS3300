@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kong Hu, zh299</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    <style>
+        body { font-family: 'Alegreya Sans', Calibri, sans-serif; }
+        svg { border: solid black 1px; }
+        path { fill: #ccc; stroke: #888; }
+        .axisGreen Path{
+            stroke: green;
+            stroke-width: 5;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="q1">
+<p>1. In HW2 you recreated Fig. 2 from the Wickham reading using SVG elements. Now create the same plot again, but this time using d3 functions. First create x and y scale functions that map from data coordinates to SVG coordinates (10 pts). Add circles and rectangles, with positions given by the x and y scales. You don't need to use data() or enter() functions: it's fine if you do a separate command for each shape (10 pts). Add d3 axes, again using the x and y scale functions (10 pts). Now add an event listener that changes the
+    color of a circles or rectangles to blue when it is clicked, using d3 selections</p>
+<svg height="400" width="400"></svg>
+<script>
+    var svg = d3.select("svg");
+    var XScale = d3.scaleLinear()
+            .domain([0, 9])
+            .range([30, 370]);
+
+    //create axes
+    var XAxis = d3.axisBottom(XScale);
+
+    svg.append("g").attr("transform","translate(0,370)").call(XAxis);
+
+
+    var YScale = d3.scaleLinear()
+            .domain([0, 80])
+            .range([370, 30]);
+
+    var YAxis = d3.axisLeft(YScale);
+
+    svg.append("g").attr("transform","translate(30,0)").call(YAxis);
+
+    svg.append("circle")
+            .attr("cx", XScale(2))
+            .attr("cy", YScale(4))
+            .attr("r", 5);
+
+    svg.append("circle")
+            .attr("cx", XScale(1))
+            .attr("cy", YScale(1))
+            .attr("r", 5);
+
+    svg.append("rect")
+            .attr("x", XScale(4))
+            .attr("y", YScale(15))
+            .attr("width", 10)
+            .attr("height",10);
+
+    svg.append("rect")
+            .attr("x", XScale(9))
+            .attr("y", YScale(80))
+            .attr("width", 10)
+            .attr("height",10);
+
+    var circles = d3.selectAll("circle")
+            .on("click", function(){d3.select(this).style("fill", "blue");});
+
+    var rectangles = d3.selectAll("rect")
+            .on("click", function(){d3.select(this).style("fill", "blue");});
+
+</script>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="q2B">
+<p>2. In this problem we're going to plot some data about English word frequencies from Google Books. The file words.json contains a JSON block that defines an array of objects. Each object represents a word, sorted by the number of pages that contain at least one instance of the word. The most frequent word, "of", occurs 15 billion times. The 512th most
+    frequent word, "middle", occurs 45 million times. Add appropriate d3 axes for each figure.</p>
+
+
+<script>
+var svg1 = d3.select("body")
+        .append("svg")
+        .attr("width", "200")
+        .attr("height", "200")
+        .attr("border","black");
+
+var svg2 = d3.select("body")
+        .append("svg")
+        .attr("width", "200")
+        .attr("height", "200")
+        .attr("border","black");
+
+var svg3 = d3.select("body")
+        .append("svg")
+        .attr("width", "200")
+        .attr("height", "200")
+        .attr("border","black");
+
+
+    var wordData;
+
+//Problem 2B
+    d3.json("words.json", function (error, data) {
+        wordData = data;
+
+
+        var countExtent = d3.extent(wordData,
+                function (d) {
+                    return d.count;
+                });
+        var countScale = d3.scaleLinear()
+                .domain(countExtent)
+                .range([180, 20]);
+
+        //create axes
+        var countAxis = d3.axisLeft(countScale);
+        svg1.append("g").attr("transform", "translate(20,0)").call(countAxis);
+
+
+        var rankExtent = d3.extent(wordData,
+                function (d) {
+                    return d.rank;
+                });
+
+        var rankScale = d3.scaleLinear()
+                .domain(rankExtent)
+                .range([20, 180]);
+
+        var rankAxis = d3.axisBottom(rankScale);
+        svg1.append("g").attr("transform", "translate(0,180)").call(rankAxis);
+
+
+        wordData.forEach(function (word) {
+            svg1.append("text")
+                    .attr("y", countScale(word.count))
+                    .attr("x", rankScale(word.rank))
+                    .text(word.word);
+        });
+    });
+
+d3.select("body").append("p")
+    .text("The scale of the first graph is not very useful since the values are too extreme. The relationship between rank and count is thus not well represented by a linear scale.");
+</script>
+</div>
+
+
+<div id="q2C">
+<script>
+//Problem 2C
+        d3.json("words.json", function (error, data) {
+            wordData = data;
+
+        var countScale2 = d3.scaleLinear()
+                .domain([Math.log(144913), Math.log(15342397280)])
+                .range([180, 20]);
+
+//create axes
+        var countAxis2 = d3.axisLeft(countScale2);
+        svg2.append("g").attr("transform", "translate(20,0)").call(countAxis2);
+
+        var rankScale2 = d3.scaleLinear()
+                .domain([Math.log(1), Math.log(65536)])
+                .range([20, 180]);
+
+        var rankAxis2 = d3.axisBottom(rankScale2);
+        svg2.append("g").attr("transform", "translate(0,180)").call(rankAxis2);
+
+
+        wordData.forEach(function (word) {
+            svg2.append("text")
+                    .attr("y", countScale2(Math.log(word.count)))
+                    .attr("x", rankScale2(Math.log(word.rank)))
+                    .text(word.word);
+        });
+    });
+
+
+//Problem 2D
+
+d3.json("words.json", function (error, data) {
+    wordData = data;
+
+    var countExtent = d3.extent(wordData,
+            function (d) {
+                return d.count;
+            });
+    var countScale = d3.scaleLog()
+            .domain(countExtent)
+            .range([180, 20]);
+
+    //create axes
+    var countAxis = d3.axisLeft(countScale);
+    svg3.append("g").attr("transform", "translate(20,0)").call(countAxis);
+
+
+    var rankExtent = d3.extent(wordData,
+            function (d) {
+                return d.rank;
+            });
+
+    var rankScale = d3.scaleLog()
+            .domain(rankExtent)
+            .range([20, 180]);
+
+    var rankAxis = d3.axisBottom(rankScale);
+    svg3.append("g").attr("transform", "translate(0,180)").call(rankAxis);
+
+
+    wordData.forEach(function (word) {
+        svg3.append("text")
+                .attr("class", "wordlabels")
+                .attr("y", countScale(word.count))
+                .attr("x", rankScale(word.rank))
+                .text(word.word);
+    });
+});
+
+</script>
+
+</div>
+
+<div id="q3">
+    <p>3. Line plots. In this problem you will simulate projectile motion under the influence of gravity using a finite approximation where we estimate the projectile's position every 0.2 seconds. (This method was the original use for the ENIAC electronic computer.) Keep track
+        of the x and y position (displacement) separately</p>
+    <script>
+
+        //			Homework testing
+        var x, y;
+        var xVelocity; //constant
+        var yVelocity;
+        var xAcceleration = 0;
+        var yAcceleration = -9.8 / 5;
+
+        var objects = [];
+
+        function trajectory (vInitial, a, yInitial) {
+            objects[0]={x: 0, y: yInitial, xVelocity: vInitial * Math.cos(a* (Math.PI/180)), yVelocity: (vInitial * Math.sin(a*Math.PI/180)) - yAcceleration, xAcceleration, yAcceleration};
+
+            var i = 0;
+
+            while (objects[i].y >= 0) {
+
+                this.xVelocity = objects[i].xVelocity;
+                this.yVelocity = objects[i].yVelocity + yAcceleration;
+                this.x = objects[i].x + 0.2*this.xVelocity;
+                this.y = objects[i].y + 0.2*this.yVelocity;
+
+                objects.push({x, y, xVelocity, yVelocity, xAcceleration, yAcceleration});
+
+                i++;
+            }
+            return objects;
+        }
+
+        console.log(objects);
+
+        // svg
+        var width = 400;
+        var height = 200;
+        var padding = 40;
+
+        var svg4 = d3.select("#q3")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+        var xScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([padding, width - padding]);
+
+        var yScale = d3.scaleLinear()
+                .domain([0, 30])
+                .range([height - padding, padding]);
+
+        var xAxis = d3.axisBottom(xScale);
+        svg4.append("g")
+                .attr("transform", "translate(0, "+ yScale(0) +")")
+                .call(xAxis)
+                .attr("class", "axisGreen");
+
+        var yAxis = d3.axisLeft(yScale);
+        svg4.append("g")
+                .attr("transform", "translate("+ padding +", 0)")
+                .call(yAxis);
+
+        // show line chart
+
+        var pathGenerator = d3.line()
+                .x(function(d) {return xScale(d.x); })
+                .y(function(d) {return yScale(d.y); });
+
+        function plotTrajectory(data) {
+            var paths = svg4.selectAll("path.pathData").data(objects);
+
+            paths.enter().append("path")
+                    .attr("d", pathGenerator(objects))
+                    .style("stroke", "red")
+                    .style("opacity", 0.25)
+                    .style("stroke-width", "5px")
+                    .style("fill", "none");
+
+            var xLast = objects[objects.length - 1].x;
+
+            svg4.append("text")
+                    .attr("x", xScale(xLast))
+                    .attr("y", height - padding)
+                    .text(xLast)
+                    .style("fill", "black")
+                    .attr("transform", "translate(0, -10)")
+                    .style("font-size", 10);
+        }
+
+
+        var winning = trajectory(27.38,45,1);
+        plotTrajectory(winning);
+
+    </script>
+</div>
+
+
+
+<div id = q4>
+<p>4. Map yourself! Find the longitude and latitude coordinates of three places that have meaning to you. Two must be within 30 miles of each other, the third must be at least 1000 miles away. Use d3 to create a map of the world, the US, or any relevant continent or region (10 pts). Use the JSON geographic files included with the class notes on GitHub or find your own. Select a projection for the map. Consult the d3 documentation for options. If you choose, you may want to use one of the projections from the d3-geo-projection package, which will require an additional javascript library file, available at https://github.com/d3/d3geo-projection/. Place colored circles on the map in the locations you selected. Add text labels describing the meaning of these places. For each location connect the circle to the
+    text with a line. </p>
+
+<script>
+
+    // Data
+    var places = [
+        {
+            name: "My company",
+            lat: 37.38,
+            long: -122.05
+        },
+        {
+            name: "My home",
+            lat: 42.8,
+            long: -76.48
+        },
+        {
+            name: "My school",
+            lat: 42.4,
+            long: -76.48
+        }
+    ];
+
+    // Constants
+    var height = 600;
+    var width = 900;
+    var map = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height",height);
+    var states;
+
+    var projection = d3.geoAlbersUsa();
+    var path = d3.geoPath().projection(projection);
+
+    // Map
+    d3.json("us.json", function(error, shapes) {
+        // Create Paths
+        states = topojson.feature(shapes,
+                shapes.objects.states).features;
+
+        var statePaths = map.append("g");
+
+        statePaths.selectAll("path").
+        data(states).enter()
+                .append("path")
+                .attr("d", path);
+
+        // More constants
+        var radius = 4;
+        var offset = -40;
+
+        // Datapoints / Processing
+        places.forEach(function (place) {
+            // Data points
+            map.append("circle")
+                    .attr("cx", projection([place.long, place.lat])[0])
+                    .attr("cy", projection([place.long, place.lat])[1])
+                    .attr("r", radius)
+                    .attr("fill", "red");
+
+            // Labels
+            map.append("text")
+                    .attr("x", projection([place.long, place.lat])[0] + offset)
+                    .attr("y", projection([place.long, place.lat])[1] - offset)
+                    .text(place.name)
+                    .attr("font-size",10);
+
+            map.append("line")
+                    .attr("x1",projection([place.long, place.lat])[0])
+                    .attr("x2",projection([place.long, place.lat])[0] + offset)
+                    .attr("y1", projection([place.long, place.lat])[1])
+                    .attr("y2", projection([place.long, place.lat])[1] - offset)
+                    .style("stroke-width", 1)
+                    .style("stroke", "black");
+
+        });
+
+
+    });
+
+
+</script>
+</div>
+
+
+</body>
+</html>

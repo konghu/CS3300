@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hw1</title>
+</head>
+<body>
+<p id="p1">
+    1. [Die simulator] Write a function called roll that returns a random value from
+    [1, 2, 3, 4, 5, 6], with equal (uniform) probability. Run this function 10 times
+    and display the results in the p tag for this problem. The function join on an array
+    may be useful when displaying results.
+    <br>
+    <script>
+        var x = [1,2,3,4,5,6];
+        var arr = [];
+        function roll() { return x[Math.floor(Math.random() * x.length)]}
+        while (arr.length < 10){
+            arr[arr.length] =  roll();
+        }
+        document.getElementById("p1").innerHTML += "<p><i>Answer: [" + arr.join(", ") + "]</i></p >";
+    </script>
+</p>
+
+<p id="p2">
+    2. [Weird die simulator] Write a function called diceFactory that takes one
+    argument, an array called values, and returns a function. This returned function
+    should work the same way as your roll() function, but return a uniform sample
+    from the values array rather than digits from 1-6. Create a <f></f>unction rgb by calling
+    diceFactory(["red", "blue", "green"]). Run the rgb function 10 times
+    and display the results in the p tag for this problem
+    <br>
+    <script>
+        function diceFactory(values) {
+            return values[Math.floor(Math.random() * values.length)];
+        }
+        function rgb() {
+            return diceFactory(["red", "blue", "green"]);
+        }
+        var a = [];
+        for (var i = 0; i < 10; i++) {
+            a.push(rgb());
+        }
+        document.getElementById("p2").innerHTML += "<p><i>Answer: [" + a.join(", ") + "]</i></p >";
+    </script>
+</p>
+
+<p id="p3">3.[Non-transitive dice generator] I recently got some fun conference
+    swag: non-transitive dice. These are four six-sided dice that have the following face values:
+    [1, 1, 1, 5, 5, 5] [0, 0, 4, 4, 4, 4] [3, 3, 3, 3, 3, 3] [2, 2, 2, 2, 6, 6]
+    We'll call these E0, E1, E2, and E3 in honor of their inventor, Bradley Efron.
+    Write a new dice-rolling function generator function called nonTransitiveFactory
+    that returns a function that simulates one of these dice. The generator function
+    should take one argument, a number from {0, 1, 2, 3}, that specifies which die
+    to return. Use the generator function to create a dice-rolling function oneFive
+    that samples from E0. Run this function 10 times and display the results in the
+    p tag for this problem.
+    <br>
+    <script>
+        E0=[1,1,1,5,5,5];
+        E1=[0,0,4,4,4,4];
+        E2=[3,3,3,3,3,3];
+        E3=[2,2,2,2,6,6];
+        function nonTransitiveFactory(values){
+            function generator(){
+                if (values == 0) {
+                    var dice = E0;
+                } else if (values == 1) {
+                    var dice = E1;
+                } else if (values == 2) {
+                    var dice = E2;
+                } else {
+                    var dice = E3;
+                }
+                var ranNum = Math.floor(Math.random()* (dice).length);
+                return (dice)[ranNum];
+            }
+            return generator;
+        }
+        var oneFive = nonTransitiveFactory(0);
+        var finalResult = new Array();
+        for (i=0; i<10; i++){
+            finalResult.push(oneFive());
+        }
+        var final = finalResult.join();
+        document.getElementById("p3").innerHTML += "p3: " + final;
+    </script>
+</p>
+
+
+
+
+
+<p id = "p4"> 4.[Rolling many times] Write a function called rollNTimes that takes
+    three arguments, two dice-rolling functions (i.e. functions returned by your
+    nonTransitiveFactory function) and a number n. It should "roll" the two dice
+    n times and return the number of times the first function returned a value
+    greater than the second function. Run this function 10 times with E0 and E1
+    with n=100, and display the results in the p tag for this problem.
+    <br>
+    <script>
+        function rollNTimes(roll1,roll2,n){
+            var result = 0;
+            var i;
+            for (i=0; i<n; i++){
+                var firstResult = roll1();
+                var secondResult = roll2();
+                if (firstResult > secondResult){
+                    result += 1;
+                }
+            }
+            return  result;
+        }
+        var roll1 = nonTransitiveFactory(0);
+        var roll2 = nonTransitiveFactory(1);
+        var finalResult = [];
+        var x;
+        for (x=0; x<10; x++){
+            finalResult.push(rollNTimes(roll1,roll2,100));
+        }
+        var final = finalResult.join();
+        document.getElementById("p4").innerHTML += "p4: " + final;
+    </script>
+</p>
+
+<p id = "p5">5. While E0 is more likely to beat E1, E1 is more likely to beat E2, E2 is more likely to beat E3,
+    that doesn't necessarily mean E1 is more likely to beat E3. In fact, E3 is more likely to beat E0. This is
+why it's called non-transitive dices.
+<table>
+    <tr>
+        <td id = "00"></td>
+        <td id = "01"></td>
+        <td id = "02"></td>
+        <td id = "03"></td>
+    </tr>
+    <tr>
+        <td id = "10"></td>
+        <td id = "11"></td>
+        <td id = "12"></td>
+        <td id = "13"></td>
+    </tr>
+    <tr>
+        <td id = "20"></td>
+        <td id = "21"></td>
+        <td id = "22"></td>
+        <td id = "23"></td>
+    </tr>
+    <tr>
+        <td id = "30"></td>
+        <td id = "31"></td>
+        <td id = "32"></td>
+        <td id = "33"></td>
+    </tr>
+</table>
+<script>
+    var i;
+    var j;
+    for (i=0; i<4; i++){
+        for (j = 0; j<4; j++){
+            var roll1 = nonTransitiveFactory(i);
+            var roll2 = nonTransitiveFactory(j);
+            var final = rollNTimes(roll1,roll2,1000);
+            document.getElementById(""+i+j).innerHTML = final;
+        }
+    }
+</script>
+</P>
+</body>
+</html>
