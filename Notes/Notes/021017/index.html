@@ -65,7 +65,8 @@ function parseLine (line) {
 
 d3.tsv("CountryProfile.tsv", parseLine, function (error, data) {
 	rawData = data;
-	
+	console.log(rawData);
+
 	console.log("Code in the call-back function is only executed when the data file loads.");
 	
 	nestedData = d3.nest()
